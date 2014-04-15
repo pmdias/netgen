@@ -83,16 +83,12 @@ void error_exit();			/* print error message and exit               */
 #define C    arrayc_
 #define B    arrayb_
 
-#ifdef ALLOCATE_NETWORK	    		/* storage definitions */
-#define EXTERN 
-#else
-#define EXTERN extern
-#endif /* ALLOCATE_NETWORK */
+/*** Externally visible variables ***/
 
-EXTERN NODE     FROM[MAXARCS];	/* origin of each arc */
-EXTERN NODE     TO  [MAXARCS];	/* destination */
-EXTERN CAPACITY U   [MAXARCS];	/* capacity */
-EXTERN COST     C   [MAXARCS];	/* cost */
-EXTERN CAPACITY B   [MAXNODES];	/* supply (demand) at each node */
+extern NODE     FROM[MAXARCS];	/* origin of each arc */
+extern NODE     TO  [MAXARCS];	/* destination */
+extern CAPACITY U   [MAXARCS];	/* capacity */
+extern COST     C   [MAXARCS];	/* cost */
+extern CAPACITY B   [MAXNODES];	/* supply (demand) at each node */
 
 #endif /* NETGEN_H */

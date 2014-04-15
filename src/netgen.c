@@ -86,6 +86,13 @@
 #include "netgen.h"
 
 
+/*** Global Variables ***/
+NODE     FROM[MAXARCS];		/* origin of each arc */
+NODE     TO  [MAXARCS];		/* destination */
+CAPACITY U   [MAXARCS];		/* capacity */
+COST     C   [MAXARCS];		/* cost */
+CAPACITY B   [MAXNODES];	/* supply (demand) at each node */
+
 /*** Private interfaces */
 
 #ifdef DEBUG
