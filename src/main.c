@@ -110,6 +110,7 @@ main(int argc, char **argv)
 	
 	/* Open output file */
 	sprintf(filename, "%ld", problem);
+	strcat(filename, ".min");
 	fout = fopen(filename, "w");
 	if(!fout) {
 		fprintf(stderr, "Unable to open output file.\n");

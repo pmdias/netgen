@@ -24,4 +24,5 @@ main.o: src/main.c
 	$(CC) $(CFLAGS) $^ -c
 
 clean:
+	rm ./bin/*
 	rm *.o
