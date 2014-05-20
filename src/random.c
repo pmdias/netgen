@@ -12,6 +12,7 @@
 #include "random.h"
 
 static long saved_seed;
+static long saved_seed2;
 
 
 /*** set_randomi - initialize constants and seed */
@@ -19,6 +20,7 @@ static long saved_seed;
 void set_randomi(long seed)
 {
 	saved_seed = seed;
+	saved_seed2 = (saved_seed - 1000) % MODULUS;
 }
 
 
@@ -44,4 +46,26 @@ long randomi(long a, long b)
 	}
 	
 	return a + saved_seed % (b - a + 1);
+}
+
+long randomi2(long a, long b)
+{
+	register long hi, lo;
+
+	hi = MULTIPLIER * (saved_seed2 >> 16);
+	lo = MULTIPLIER * (saved_seed2 & 0xffff);
+	hi += (lo>>16);
+	lo &= 0xffff;
+	lo += (hi>>15);
+	hi &= 0x7fff;
+	lo -= MODULUS;
+	if((saved_seed2 = (hi<<16) + lo) < 0) {
+		saved_seed2 += MODULUS;
+	}
+
+	if(b <= a) {
+		return b;
+	}
+	
+	return a + saved_seed2 % (b - a + 1);
 }

@@ -75,30 +75,36 @@ main(int argc, char **argv)
 					fprintf(stdout, "Number of Arcs: ");
 					break;
 				case 4:
-					fprintf(stdout, "Arc Minimum Cost: ");
+					fprintf(stdout, "Arc Minimum Cost 1: ");
 					break;
 				case 5:
-					fprintf(stdout, "Arc Maximum Cost: ");
+					fprintf(stdout, "Arc Maximum Cost 1: ");
 					break;
 				case 6:
-					fprintf(stdout, "Total Supply: ");
+					fprintf(stdout, "Arc Minimum Cost 2: ");
 					break;
 				case 7:
-					fprintf(stdout, "Transshipment Sources: ");
+					fprintf(stdout, "Arc Maximum Cost 2: ");
 					break;
 				case 8:
-					fprintf(stdout, "Transshipment Sinks: ");
+					fprintf(stdout, "Total Supply: ");
 					break;
 				case 9:
-					fprintf(stdout, "Percent of skeleton arcs given maximum cost: ");
+					fprintf(stdout, "Transshipment Sources: ");
 					break;
 				case 10:
-					fprintf(stdout, "Percent of arcs to be capacitated: ");
+					fprintf(stdout, "Transshipment Sinks: ");
 					break;
 				case 11:
-					fprintf(stdout, "Minimum capacity for capacitated arcs: ");
+					fprintf(stdout, "Percent of skeleton arcs given maximum cost: ");
 					break;
 				case 12:
+					fprintf(stdout, "Percent of arcs to be capacitated: ");
+					break;
+				case 13:
+					fprintf(stdout, "Minimum capacity for capacitated arcs: ");
+					break;
+				case 14:
 					fprintf(stdout, "Maximum capacity for capacitated arcs: ");
 					break;
 				default:
@@ -126,8 +132,10 @@ main(int argc, char **argv)
 	fprintf(fout, "c   Source nodes:         %10ld\n",   SOURCES);
 	fprintf(fout, "c   Sink nodes:           %10ld\n",   SINKS);
 	fprintf(fout, "c   Number of arcs:       %10ld\n",   DENSITY);
-	fprintf(fout, "c   Minimum arc cost:     %10ld\n",   MINCOST);
-	fprintf(fout, "c   Maximum arc cost:     %10ld\n",   MAXCOST);
+	fprintf(fout, "c   Minimum arc cost 1:   %10ld\n",   MINCOST);
+	fprintf(fout, "c   Maximum arc cost 1:   %10ld\n",   MAXCOST);
+	fprintf(fout, "c   Minimum arc cost 2:   %10ld\n",   MINCOST2);
+	fprintf(fout, "c   Maximum arc cost 2:   %10ld\n",   MAXCOST2);
 	fprintf(fout, "c   Total supply:         %10ld\n",   SUPPLY);
 	fprintf(fout, "c   Transshipment -\n");
 	fprintf(fout, "c     Sources:            %10ld\n",   TSOURCES);
@@ -155,7 +163,7 @@ main(int argc, char **argv)
 			}
 		}
 		for(i = 0; i < arcs; i++) {
-			fprintf(fout, "a %ld %ld %ld\n", FROM[i], TO[i], C[i]);
+			fprintf(fout, "a %ld %ld %ld\n", FROM[i], TO[i], C1[i]);
 		}	
 	} else if (MINCOST == 1 && MAXCOST == 1) {
 		fprintf(fout, "c\n");
@@ -183,7 +191,7 @@ main(int argc, char **argv)
 			}
 		}
 		for(i = 0; i < arcs; i++) {
-			fprintf(fout, "a %ld %ld %ld %ld %ld\n", FROM[i], TO[i], (long) 0, U[i], C[i]);
+			fprintf(fout, "a %ld %ld %ld %ld %ld %ld\n", FROM[i], TO[i], (long) 0, U[i], C1[i], C2[i]);
 		}
 	}
 	

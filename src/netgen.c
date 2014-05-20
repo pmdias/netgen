@@ -90,7 +90,8 @@
 NODE     FROM[MAXARCS];		/* origin of each arc */
 NODE     TO  [MAXARCS];		/* destination */
 CAPACITY U   [MAXARCS];		/* capacity */
-COST     C   [MAXARCS];		/* cost */
+COST     C1  [MAXARCS];		/* cost set 1 */
+COST	 C2	 [MAXARCS];		/* cost set 2 */
 CAPACITY B   [MAXNODES];	/* supply (demand) at each node */
 
 /*** Private interfaces */
@@ -114,11 +115,12 @@ static NODE tail[MAXARCS];
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
-#define SAVE_ARC(tail, head, cost, capacity)	/* records an arc where our caller can get it */ \
+#define SAVE_ARC(tail, head, cost1, cost2, capacity)	/* records an arc where our caller can get it */ \
   {				\
     FROM[arc_count] = tail;	\
     TO  [arc_count] = head;	\
-    C   [arc_count] = cost;	\
+    C1  [arc_count] = cost1;	\
+    C2  [arc_count] = cost2;	\
     U   [arc_count] = capacity; \
     arc_count++;		\
   }
@@ -136,7 +138,8 @@ ARC netgen(long seed, long parms[])
 	NODE * sinks;
 	NODE it;
 	int chain_length;
-	COST cost;
+	COST cost1;
+	COST cost2;
 	CAPACITY cap;
 	INDEX_LIST handle;
 	int supply_per_sink;
@@ -151,9 +154,10 @@ ARC netgen(long seed, long parms[])
 		return TOO_BIG;
 	}
 	if((NODES <= 0) || (NODES > DENSITY) || (SOURCES <= 0) || (SINKS <= 0) ||
-      (SOURCES + SINKS > NODES) || (MINCOST > MAXCOST) || (SUPPLY < SOURCES) ||
-      (TSOURCES > SOURCES) || (TSINKS > SINKS) || (HICOST < 0 || HICOST > 100) ||
-      (CAPACITATED < 0 || CAPACITATED > 100) || (MINCAP > MAXCAP)) {
+      (SOURCES + SINKS > NODES) || (MINCOST > MAXCOST) || (MINCOST2 > MAXCOST2) || 
+      (SUPPLY < SOURCES) || (TSOURCES > SOURCES) || (TSINKS > SINKS) || 
+      (HICOST < 0 || HICOST > 100) || (CAPACITATED < 0 || CAPACITATED > 100) || 
+      (MINCAP > MAXCAP)) {
 		return BAD_PARMS;
 	}
 
@@ -272,11 +276,15 @@ ARC netgen(long seed, long parms[])
 				if(randomi(1L, 100L) <= CAPACITATED) {
 					cap = MAX(B[source-1], MINCAP);
 				}
-				cost = MAXCOST;
+				cost1 = MAXCOST;
 				if(randomi(1L, 100L) > HICOST) {
-					cost = randomi(MINCOST, MAXCOST);
+					cost1 = randomi(MINCOST, MAXCOST);
 				}
-				SAVE_ARC(it,head[i],cost,cap);
+				cost2 = MAXCOST2;
+				if(randomi2(1L, 100L) > HICOST) {
+					cost2 = randomi2(MINCOST2, MAXCOST2);
+				}
+				SAVE_ARC(it,head[i],cost1,cost2,cap);
 				i++;
 			}
 			pick_head(parms, handle, it);
@@ -328,7 +336,7 @@ void create_assignment(long parms[])
 	skeleton = make_index_list((INDEX)(SOURCES + 1), (INDEX)NODES);
 	for(source = 1; source <= NODES/2; source++) {
 		index = choose_index(skeleton, (INDEX)randomi(1L, (long)index_size(skeleton)));
-		SAVE_ARC(source, index, randomi(MINCOST, MAXCOST), 1);
+		SAVE_ARC(source, index, randomi(MINCOST, MAXCOST),0, 1);
 		handle = make_index_list((INDEX)(SOURCES + 1), (INDEX)NODES);
 		remove_index(handle, index);
 		pick_head(parms, handle, source);
@@ -405,7 +413,7 @@ void pick_head(long parms[], INDEX_LIST handle, NODE desired_tail)
 
 /* adding Aug 29 -- jc */
 		if((1 <= index) && (index <= NODES)) {
-			SAVE_ARC(desired_tail, index, randomi(MINCOST, MAXCOST), cap);
+			SAVE_ARC(desired_tail, index, randomi(MINCOST, MAXCOST), randomi2(MINCOST2, MAXCOST2), cap);
 		}
 	}
 }
